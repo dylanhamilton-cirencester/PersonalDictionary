@@ -1,0 +1,52 @@
+{
+    "CTk": {
+        "fg_color": ["#0038A7", "#002B7F"]
+    },
+    "CTkFrame": {
+        "corner_radius": 6,
+        "border_width": 0,
+        "fg_color": ["gray90", "gray13"],
+        "top_fg_color": ["gray85", "gray16"],
+        "border_color": ["gray65", "gray28"]
+    },
+    "CTkButton": {
+        "corner_radius": 6,
+        "border_width": 0,
+        "fg_color": ["#3A7EBF", "#1F538D"],
+        "hover_color": ["#325882", "#14375E"],
+        "border_color": ["#3E454A", "#949A9F"],
+        "text_color": ["#DCE4EE", "#DCE4EE"],
+        "text_color_disabled": ["gray74", "gray60"]
+    },
+    "CTkLabel": {
+        "corner_radius": 0,
+        "border_width": 0,
+        "fg_color": "transparent",
+        "border_color": ["#979DA2", "#565B5E"],
+        "text_color": ["gray14", "gray84"]
+    },
+    "DefinitionLabel": {
+        "corner_radius": 0,
+        "border_width": 2,
+        "fg_color": "#F5F5FF",
+        "border_color": ["#979DA2", "#565B5E"],
+        "text_color": ["gray14", "gray84"]
+    },
+    "CTkFont": {
+        "macOS": {
+            "family": "SF Display",
+            "size": 13,
+            "weight": "normal"
+        },
+        "Windows": {
+            "family": "Roboto",
+            "size": 13,
+            "weight": "normal"
+        },
+        "Linux": {
+            "family": "Roboto",
+            "size": 13,
+            "weight": "normal"
+        }
+    }
+}
