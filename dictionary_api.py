@@ -19,6 +19,7 @@ class WordData:
     phonetics: list[dict] # dict can have text and possibly audio in the form of a url
     origin: str
     meanings: list[Meaning]
+    id: int | None = None
 
     def __repr__(self) -> str:
         return f"""{self.word}

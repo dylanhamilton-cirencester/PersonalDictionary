@@ -31,11 +31,11 @@ class DictionaryDB():
         
         self.con.commit()
 
-    def remove_word(self, word: str):
+    def remove_word(self, word_id: int):
         cur = self.con.cursor()
 
-        cur.execute("DELETE FROM meaning WHERE word_id IN (SELECT id FROM dictionary WHERE word=?)", (word,))
-        cur.execute("DELETE FROM dictionary WHERE word=?", (word,))
+        cur.execute("DELETE FROM meaning WHERE word_id=?", (word_id,))
+        cur.execute("DELETE FROM dictionary WHERE id=?", (word_id,))
 
         self.con.commit()
 
@@ -51,7 +51,7 @@ class DictionaryDB():
             cur.execute("SELECT part_of_speech, definition, example FROM meaning WHERE word_id=?", (word_id,))
             meanings_data = cur.fetchall()
             meanings = [Meaning(pos, definition, example) for pos, definition, example in meanings_data]
-            word_datas.append(WordData(word_text, [], origin, meanings))
+            word_datas.append(WordData(word_text, [], origin, meanings, id=word_id))
 
         return word_datas
         
@@ -66,6 +66,6 @@ if __name__ == "__main__":
     db.create_db()
     db.add_word(WordData("hello", [{"text": "həˈləʊ", "audio": "https://api.dictionaryapi.dev/media/pronunciations/en/hello-au.mp3"}], "Old English", [Meaning("interjection", "used as a greeting or to begin a phone conversation.", "Hello there, Katie!")]))
     print(db.get_words())
-    db.remove_word("hello")
+    db.remove_word(1)
     print(db.get_words())
     db.close()
