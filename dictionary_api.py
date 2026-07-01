@@ -40,26 +40,30 @@ class DictionaryAPI:
     def __init__(self):
         self.endpoint = "https://api.dictionaryapi.dev/api/v2/entries/en/"
 
-    def get_word_data(self, word: str) -> WordData | str:
+    def get_word_data(self, word: str) -> list[WordData]:
+        word_datas = []
+
         with requests.get(self.endpoint + word) as response:
             body = response.json()
             if type(body) == dict and "title" in body:
-                return f"Word {word.strip()} not found"
+                return []
             
-            word_json = body[0]
-            # Get meanings
-            meanings = []
-            json_meanings = word_json["meanings"]
-            for meaning in json_meanings:
-                pos = meaning["partOfSpeech"]
-                definition = meaning["definitions"][0]["definition"]
-                example = "No Example Found"
-                if "example" in meaning["definitions"][0]:
-                    example = meaning["definitions"][0]["example"]
-                meanings.append(Meaning(pos, definition, example))
+            for word_json in body:
+                # Get meanings
+                meanings = []
+                json_meanings = word_json["meanings"]
+                for meaning in json_meanings:
+                    pos = meaning["partOfSpeech"]
+                    definition = meaning["definitions"][0]["definition"]
+                    example = ""
+                    if "example" in meaning["definitions"][0]:
+                        example = meaning["definitions"][0]["example"]
+                    meanings.append(Meaning(pos, definition, example))
             
-            return WordData(word_json["word"], word_json["phonetics"], word_json["origin"] if "origin" in word_json else "No Origin Found", meanings)
-        
+                word_datas.append(WordData(word_json["word"], word_json["phonetics"], word_json["origin"] if "origin" in word_json else "", meanings))
+
+        return word_datas
+
 if __name__ == "__main__":
     dict_API = DictionaryAPI()
     word = dict_API.get_word_data("hello")

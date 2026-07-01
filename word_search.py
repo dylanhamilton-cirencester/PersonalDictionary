@@ -1,10 +1,10 @@
 from tkinter import Label, Text
 from typing import Any, Tuple
-from customtkinter import END, CTkButton, CTkFont, CTkFrame, CTkLabel, ThemeManager
+from customtkinter import DISABLED, END, NORMAL, CTkButton, CTkFont, CTkFrame, CTkLabel, CTkScrollbar, CTkTextbox, ThemeManager
 from dictionary_api import DictionaryAPI, WordData
 from audio_player import playurl
 
-class DefinitionLabel(CTkLabel):
+class DefinitionLabel(CTkTextbox):
     def __init__(self, master, **kwargs):
         
         theme = ThemeManager.theme
@@ -14,9 +14,7 @@ class DefinitionLabel(CTkLabel):
         # Merge theme values with kwargs (kwargs override theme)
         merged_kwargs = {**my_theme, **kwargs}
 
-        super().__init__(master, text = "", **merged_kwargs)
-
-        self.bind('<Configure>', lambda e: self.configure(wraplength=self.winfo_width() * 0.75))
+        super().__init__(master, wrap="word", **merged_kwargs)
 
 class WordSearchFrame(CTkFrame):
     
@@ -53,23 +51,41 @@ class WordSearchFrame(CTkFrame):
         # Row 2
         self.grid_rowconfigure(2, weight=2)
 
-        self.word_def_label = DefinitionLabel(self, font=CTkFont(), justify="left")
+        self.word_def_label = DefinitionLabel(self, font=CTkFont())
         self.word_def_label.grid(row=2, column=0, sticky="nesw", padx=20, pady=20, columnspan=3, rowspan=4)
+        self.word_def_label.configure(state=DISABLED)
 
     def search(self):
         # Display definition
         word = self.search_box.get(0.0, END)
-        word_data = self.dict_api.get_word_data(word)
-        self.word_def_label.configure(text = str(word_data))
+        word_datas = self.dict_api.get_word_data(word)
+        if len(word_datas) > 0:
+            self.word_def_label.configure(state=NORMAL)
+            self.word_def_label.delete(0.0, END)
+            words_string = "\n--------------------\n\n".join([str(word_data) for word_data in word_datas])
+            self.word_def_label.insert(0.0, str(words_string))
+            self.word_def_label.configure(state=DISABLED)
+        else:
+            self.word_def_label.configure(state=NORMAL)
+            self.word_def_label.delete(0.0, END)
+            self.word_def_label.insert(0.0, "No definition found.")
+            self.word_def_label.configure(state=DISABLED)
 
         # Set up audio play
-        if type(word_data) == WordData:
-            self.audio_url = word_data.get_audio_url()
+        if word_datas:
+            self.audio_url = word_datas[0].get_audio_url()
         else:
             self.audio_url = ""
 
 
     def play_phonetics(self):
         if self.audio_url != "":
-            playurl(self.audio_url)
+            self.disable_listen_button()
+            playurl(self.audio_url, self.enable_listen_button)
+
+    def disable_listen_button(self):
+        self.audio_play_button.configure(state = DISABLED)
+
+    def enable_listen_button(self):
+        self.audio_play_button.configure(state = NORMAL)
 
