@@ -5,7 +5,7 @@ from tkinter import Menu
 
 class App(CTk):
     def __init__(self):
-        set_default_color_theme("theme.json")
+        set_default_color_theme("CustomTKinter/theme.json")
         super().__init__()
         self.geometry("600x400")
         self.grid_rowconfigure(0, weight=1)  # configure grid system

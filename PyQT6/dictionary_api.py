@@ -46,7 +46,11 @@ class DictionaryAPI:
         word_datas = []
 
         with requests.get(self.endpoint + word) as response:
-            body = response.json()
+            try:
+                body = response.json()
+            except requests.JSONDecodeError:
+                return []
+
             if type(body) == dict and "title" in body:
                 return []
             

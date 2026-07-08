@@ -9,6 +9,11 @@ from database import DictionaryDB
 class SearchResult(QWidget):
     def __init__(self, word_data: WordData):
         super().__init__()
+        # Allows CSS for #SearchResult to be applied to this object
+        self.setObjectName("SearchResult")
+        # Specifically needed for background-color changes
+        self.setAttribute(Qt.WidgetAttribute.WA_StyledBackground, True)
+
         self.word_data = word_data
         self.init_ui()
 
@@ -76,15 +81,17 @@ class DictionaryApp(QWidget):
         self.show()
 
     def search_word(self):
-        for widget in self.results_area.children():
-            if isinstance(widget, SearchResult):
-                widget.setParent(None)
+        # Clear the previous results
+        for widget in self.results_list:
+            widget.setParent(None)
         self.results_list.clear()
 
+        # Get the word from the search bar
         word = self.search_bar.text()
-
+        # Get the word data from the API
         dictionary_result = self.dictionary_api.get_word_data(word)
 
+        # Add the results to the gui
         if dictionary_result is not None:
             for word_data in dictionary_result:
                 search_result_widget = SearchResult(word_data)
@@ -92,5 +99,6 @@ class DictionaryApp(QWidget):
                 self.results_list.append(search_result_widget)
 
 app = QApplication(sys.argv)
+app.setStyleSheet(open("PyQT6/style.css").read())
 ex = DictionaryApp()
 sys.exit(app.exec())
