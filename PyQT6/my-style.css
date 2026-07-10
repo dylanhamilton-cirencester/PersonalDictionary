@@ -1,0 +1,10 @@
+QPushButton {
+    background-color: #3A7EBF;
+    color: white;
+    border-radius: 5px;
+    padding: 5px 10px;
+}
+
+#RedButton {
+    background-color: #bf3a3a;
+}
