@@ -28,10 +28,11 @@ class WordData:
 
 {'\n\n'.join([str(meaning) for meaning in self.meanings])}
 """)
-    def get_audio_url(self) -> str:
-        url = ""
+    
+    def get_audio_url(self) -> str | None:
+        url = None
         for p in self.phonetics:
-            if "audio" in p:
+            if "audio" in p and p["audio"] != "":
                 url = p["audio"]
                 break
 

@@ -4,6 +4,11 @@ from PyQt6.QtCore import Qt
 from dictionary_api import DictionaryAPI, WordData
 from audio_player import playurl
 from database import DictionaryDB
+import logging
+
+logging.basicConfig()
+logger = logging.getLogger("DictionaryLogger")
+logger.setLevel(logging.INFO)
 
 class SearchResult(QWidget):
     def __init__(self, word_data: WordData):
@@ -24,14 +29,20 @@ class SearchResult(QWidget):
         self.result_label.setWordWrap(True)
         grid.addWidget(self.result_label, 0, 0, 3, 2)
 
-        self.listen_button = QPushButton('Listen')
-        self.listen_button.clicked.connect(self.play_phonetics)
-        grid.addWidget(self.listen_button, 3, 0, 1, 2)
+        if self.word_data.get_audio_url():
+            self.listen_button = QPushButton('Listen')
+            self.listen_button.clicked.connect(self.play_phonetics)
+            grid.addWidget(self.listen_button, 3, 0, 1, 2)
 
     def play_phonetics(self):
-        if self.word_data.get_audio_url() != "":
-            self.disable_listen_button()
-            playurl(self.word_data.get_audio_url(), self.enable_listen_button)
+        try:
+            audio_url = self.word_data.get_audio_url()
+            logger.info(f"Trying to play audio: {audio_url}")
+            if audio_url:
+                self.disable_listen_button()
+                playurl(audio_url, self.enable_listen_button)
+        finally:
+            self.enable_listen_button()
 
     def disable_listen_button(self):
         self.listen_button.setEnabled(False)
@@ -87,8 +98,10 @@ class DictionaryApp(QWidget):
 
         # Get the word from the search bar
         word = self.search_bar.text()
+        logger.info(f"Searching for {word}")
         # Get the word data from the API
         dictionary_result = self.dictionary_api.get_word_data(word)
+        logger.info(f"Result: {dictionary_result}")
 
         # Add the results to the gui
         if dictionary_result is not None:
