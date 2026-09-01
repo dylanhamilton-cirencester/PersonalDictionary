@@ -196,9 +196,22 @@ A **slot** is any function that we want to be called when the **signal** is sent
 Starting with **slot**. An example of one in our program might be.
 
 ```python
-def set_label_text():
+def init_ui(self):
+    ...
+
+    # Add a text input
+    self.text_input = QLineEdit()
+    # Add that to the grid layout in row 0, column 0
+    self.grid.addWidget(self.text_input, 1, 0)
+
+    ...
+    
+    self.show()
+
+def set_label_text(self):
     text = self.text_input.text()
     self.label.setText(text)
+
 ```
 
 > Note: Make sure this method is inside your MyApp class for it to access the text_input and label widgets.
