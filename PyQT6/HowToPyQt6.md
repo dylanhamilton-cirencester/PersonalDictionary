@@ -272,7 +272,7 @@ At the bottom of our scrip we can add this line.
 ```python
 ...
 app = QApplication(sys.argv)
-# This line will tell our program to 
+# This line will tell our program to use my-style.css to style our program
 app.setStyleSheet(open("my-style.css").read())
 ex = MyApp()
 sys.exit(app.exec())
