@@ -1,4 +1,3 @@
-
 import sys
 from PyQt6.QtWidgets import QApplication, QScrollArea, QVBoxLayout, QWidget, QGridLayout, QPushButton, QLineEdit, QLabel
 from PyQt6.QtCore import Qt
